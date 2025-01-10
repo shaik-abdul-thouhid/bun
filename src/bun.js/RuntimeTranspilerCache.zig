@@ -9,8 +9,9 @@
 /// Version 10: Constant folding for ''.charCodeAt(n)
 /// Version 11: Fix \uFFFF printing regression
 /// Version 12: "use strict"; makes it CommonJS if we otherwise don't know which one to pick.
-/// Version 13: Emits utf-16 files in rare cases
-const expected_version = 13;
+/// Version 13: Hoist `import.meta.require` definition, see #15738
+/// Version 14: Emits utf-16 files in rare cases
+const expected_version = 1 4;
 
 const bun = @import("root").bun;
 const std = @import("std");

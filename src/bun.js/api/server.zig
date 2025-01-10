@@ -61,7 +61,6 @@ const JSPromise = bun.JSC.JSPromise;
 const JSInternalPromise = bun.JSC.JSInternalPromise;
 const JSModuleLoader = bun.JSC.JSModuleLoader;
 const JSPromiseRejectionOperation = bun.JSC.JSPromiseRejectionOperation;
-const Exception = bun.JSC.Exception;
 const ErrorableZigString = bun.JSC.ErrorableZigString;
 const ZigGlobalObject = bun.JSC.ZigGlobalObject;
 const VM = bun.JSC.VM;
@@ -76,7 +75,7 @@ const Fallback = Runtime.Fallback;
 const MimeType = HTTP.MimeType;
 const Blob = JSC.WebCore.Blob;
 const BoringSSL = bun.BoringSSL;
-const Arena = @import("../../mimalloc_arena.zig").Arena;
+const Arena = @import("../../allocators/mimalloc_arena.zig").Arena;
 const SendfileContext = struct {
     fd: bun.FileDescriptor,
     socket_fd: bun.FileDescriptor = bun.invalid_fd,
@@ -90,7 +89,7 @@ const linux = std.os.linux;
 const Async = bun.Async;
 const httplog = Output.scoped(.Server, false);
 const ctxLog = Output.scoped(.RequestContext, false);
-const AWS = @import("../../s3.zig").AWSCredentials;
+const S3 = bun.S3;
 const BlobFileContentResult = struct {
     data: [:0]const u8,
 
@@ -3182,7 +3181,7 @@ fn NewRequestContext(comptime ssl_enabled: bool, comptime debug_mode: bool, comp
             this.endWithoutBody(this.shouldCloseConnection());
             this.deref();
         }
-        pub fn onS3SizeResolved(result: AWS.S3StatResult, this: *RequestContext) void {
+        pub fn onS3SizeResolved(result: S3.S3StatResult, this: *RequestContext) void {
             defer {
                 this.deref();
             }
@@ -3254,7 +3253,7 @@ fn NewRequestContext(comptime ssl_enabled: bool, comptime debug_mode: bool, comp
                             const path = blob.store.?.data.s3.path();
                             const env = globalThis.bunVM().transpiler.env;
 
-                            credentials.s3Stat(path, @ptrCast(&onS3SizeResolved), this, if (env.getHttpProxy(true, null)) |proxy| proxy.href else null);
+                            S3.stat(credentials, path, @ptrCast(&onS3SizeResolved), this, if (env.getHttpProxy(true, null)) |proxy| proxy.href else null);
 
                             return;
                         }

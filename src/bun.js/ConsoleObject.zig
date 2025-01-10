@@ -21,12 +21,12 @@ const default_allocator = bun.default_allocator;
 const JestPrettyFormat = @import("./test/pretty_format.zig").JestPrettyFormat;
 const JSPromise = JSC.JSPromise;
 const EventType = JSC.EventType;
-
 pub const shim = Shimmer("Bun", "ConsoleObject", @This());
 pub const Type = *anyopaque;
 pub const name = "Bun::ConsoleObject";
 pub const include = "\"ConsoleObject.h\"";
 pub const namespace = shim.namespace;
+
 const Counter = std.AutoHashMapUnmanaged(u64, u32);
 
 const BufferedWriter = std.io.BufferedWriter(4096, Output.WriterType);
@@ -72,8 +72,8 @@ pub const MessageType = enum(u32) {
     _,
 };
 
-var stderr_mutex: bun.Lock = .{};
-var stdout_mutex: bun.Lock = .{};
+var stderr_mutex: bun.Mutex = .{};
+var stdout_mutex: bun.Mutex = .{};
 
 threadlocal var stderr_lock_count: u16 = 0;
 threadlocal var stdout_lock_count: u16 = 0;
@@ -2485,6 +2485,9 @@ pub const Formatter = struct {
                     return;
                 } else if (value.as(JSC.WebCore.Blob)) |blob| {
                     blob.writeFormat(ConsoleObject.Formatter, this, writer_, enable_ansi_colors) catch {};
+                    return;
+                } else if (value.as(JSC.WebCore.S3Client)) |s3client| {
+                    s3client.writeFormat(ConsoleObject.Formatter, this, writer_, enable_ansi_colors) catch {};
                     return;
                 } else if (value.as(JSC.FetchHeaders) != null) {
                     if (value.get_unsafe(this.globalThis, "toJSON")) |toJSONFunction| {
