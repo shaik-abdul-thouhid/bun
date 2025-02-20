@@ -1600,6 +1600,8 @@ pub const BundleOptions = struct {
     /// "react-jsx" or "react-jsx-dev-runtime")
     force_node_env: ForceNodeEnv = .unspecified,
 
+    ignore_module_resolution_errors: bool = false,
+
     pub const ForceNodeEnv = enum {
         unspecified,
         development,

@@ -186,8 +186,6 @@ pub const ImportRecord = struct {
         /// crossover to the SSR graph. See bake.Framework.ServerComponents.separate_ssr_graph
         bake_resolve_to_ssr_graph,
 
-        tailwind,
-
         pub inline fn isRuntime(this: Tag) bool {
             return this == .runtime;
         }
