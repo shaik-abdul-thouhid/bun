@@ -4858,6 +4858,7 @@ pub const ParseTask = struct {
 
         var step: ParseTask.Result.Error.Step = .pending;
         var log = Logger.Log.init(worker.allocator);
+        log.clone_line_text = true;
         bun.assert(this.source_index.isValid()); // forgot to set source_index
 
         const result = bun.default_allocator.create(Result) catch bun.outOfMemory();
