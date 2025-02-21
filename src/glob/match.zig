@@ -286,7 +286,7 @@ inline fn globMatchImpl(state: *State, glob: []const u8, path: []const u8, brace
                 if (!unescape(&cc, glob, &state.glob_index)) {
                     return false; // Invalid pattern!
                 }
-                const cc_len = bun.strings.unicode.decodeFirst(.wtf8_replace_invalid, path[state.path_index..]).?.advance;
+                const cc_len = bun.strings.unicode.decodeFirst(.wtf8_replace_invalid, glob[state.glob_index..]).?.advance;
 
                 const is_match = if (cc == '/')
                     isSeparator(path[state.path_index])
