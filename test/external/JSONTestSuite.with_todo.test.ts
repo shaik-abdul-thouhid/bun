@@ -94,6 +94,7 @@ for (const json_file of json_files) {
   testfn(json_file, async () => {
     const build_res = await Bun.build({
       entrypoints: [json_path],
+      throw: false,
     });
     if (!build_res.success) {
       if (mode === "either" || mode === "fail") {
